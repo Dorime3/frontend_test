@@ -1,10 +1,10 @@
 <template>
   <div class="product-list">
-<!--  То, что ниже вынес бы в айтем лист  -->
+    <!--  То, что ниже вынес бы в айтем лист  -->
     <div class="card"
-        v-for="(product, idx) in productList"
-        :key="product.id"
-        :style="{width: cardsWidth}">
+         v-for="(product, idx) in productList"
+         :key="product.id"
+         :style="{width: cardsWidth}">
       <p class="card-title">
         {{ product.title }}
       </p>
@@ -21,7 +21,7 @@
         <span>кг</span>
       </div>
 
-      <button  @click="addToCart(product, idx)">
+      <button @click="addToCart(product, idx)">
         В корзину
       </button>
     </div>
@@ -66,7 +66,6 @@ export default {
       return await this.$store.dispatch('getProductList')
     },
     addToCart(product, idx) {
-      // let amount = this.$refs.amount.find((input) => input.id === product.id).value; // ну как бы дич и нет)
       if (this.amount[idx] <= 0) {
         alert('Введите корректное кол-во')
         return
@@ -93,24 +92,26 @@ export default {
 </script>
 
 <style scoped>
-  .product-list {
-    padding: 10px;
-  }
+.product-list {
+  padding: 10px;
+}
 
-  .product-list .card {
-    display: inline-block;
-    width: 100%;
-    border: 1px solid #908888;
-    border-radius: 5px;
-    text-align: center;
-    padding: 10px;
-  }
-  .product-list .card .card-image {
-    width: 100%;
-  }
-  button {
-    padding: 5px;
-    margin: 5px;
-  }
+.product-list .card {
+  display: inline-block;
+  width: 100%;
+  border: 1px solid #908888;
+  border-radius: 5px;
+  text-align: center;
+  padding: 10px;
+}
+
+.product-list .card .card-image {
+  width: 100%;
+}
+
+button {
+  padding: 5px;
+  margin: 5px;
+}
 
 </style>
