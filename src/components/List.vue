@@ -1,16 +1,29 @@
 <template>
   <div class="product-list">
-    <div class="card" v-for="product in products" :style="{width: cardsWidth + '%'}">
-      <p class="card-title">{{ product.title }}</p>
-      <img class="card-image" :src="product.image" alt="">
-      <p class="card-price">Цена: {{ product.price }} {{ currency }}</p>
+<!--  То, что ниже вынес бы в айтем лист  -->
+    <div class="card"
+        v-for="(product, idx) in productList"
+        :key="product.id"
+        :style="{width: cardsWidth}">
+      <p class="card-title">
+        {{ product.title }}
+      </p>
+      <img class="card-image"
+           :src="product.image"
+           alt="Фото товара">
+      <p class="card-price">
+        Цена: {{ product.price }} {{ currency }}
+      </p>
 
       <div>
-        <input type="number" ref="amount" :id="product.id">
+        <input type="number"
+               v-model="amount[idx]">
         <span>кг</span>
       </div>
 
-      <button @click="addToCart(product)"> В корзину </button>
+      <button  @click="addToCart(product, idx)">
+        В корзину
+      </button>
     </div>
   </div>
 </template>
@@ -22,54 +35,69 @@ export default {
   },
   data() {
     return {
-      products: [],
+      viewWidth: null,
+      interval: null,
+      amount: []
     };
   },
   computed: {
     cardsWidth() {
-      let width = window.innerWidth;
       let count = 1;
-      if (width > '840px') {
+      if (this.viewWidth > 840) {
         count = 3;
-      } else if ((width > '420px' && width < '840px')) {
+      } else if ((this.viewWidth > 420 && this.viewWidth < 840)) {
         count = 2;
       }
-
-      return 100 / count;
+      return `${100 / count}%`;
     },
+    productList() {
+      return this.$store.state.productList
+    }
   },
   methods: {
     startPricesMonitoring() {
-      setInterval(this.getList, 1000);
+      this.interval = setInterval(this.getList, 2000);
+    },
+    updateWidth() {
+      this.viewWidth = window.innerWidth
     },
     async getList() {
-      let data = await this.$store.dispatch('getProductsList');
-
-      this.products = data;
+      console.log('render list every 2sec')
+      return await this.$store.dispatch('getProductList')
     },
-    addToCart(product) {
-      let amount = this.$refs.amount.find((input) => input.id === product.id).value;
-
-      let data = {
-        amount,
+    addToCart(product, idx) {
+      // let amount = this.$refs.amount.find((input) => input.id === product.id).value; // ну как бы дич и нет)
+      if (this.amount[idx] <= 0) {
+        alert('Введите корректное кол-во')
+        return
+      }
+      const data = {
+        amount: this.amount[idx],
         price: product.price,
         title: product.title,
       };
-      this.$parent.cart.push(data);
+      this.$emit('addToCart', data)
     },
   },
   created() {
     this.startPricesMonitoring();
+    this.getList();
+    this.updateWidth();
+    window.addEventListener('resize', this.updateWidth);
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateWidth);
+    clearInterval(this.interval)
+  }
 };
 </script>
 
-<style>
+<style scoped>
   .product-list {
     padding: 10px;
   }
 
-  .card {
+  .product-list .card {
     display: inline-block;
     width: 100%;
     border: 1px solid #908888;
@@ -77,7 +105,7 @@ export default {
     text-align: center;
     padding: 10px;
   }
-  .card-image {
+  .product-list .card .card-image {
     width: 100%;
   }
   button {

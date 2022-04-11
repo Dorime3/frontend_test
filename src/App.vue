@@ -1,7 +1,13 @@
 <template>
   <div id="app">
-    <Header :cart="cart" :currency="currency"></Header>
-    <List :currency="currency"/>
+    <Header
+        :cart="cart"
+        :currency="currency">
+
+    </Header>
+    <List :currency="currency"
+          @addToCart="addToCart"
+    />
     <Cart :cart="cart"/>
   </div>
 </template>
@@ -24,6 +30,11 @@ export default {
     List,
     Cart,
   },
+  methods: {
+    addToCart(product) {
+      this.cart.push(product)
+    }
+  }
 }
 </script>
 

@@ -1,8 +1,13 @@
 <template>
   <div class="cart-list">
-    <div v-for="item in spisok_dlya_rendera">
-      {{ item }}
-    </div>
+    <ul>
+      <li v-for="item in reverseCart"
+          :key="item.id">
+        Товар: {{ item.title }}
+        <br/>
+        Количество: {{ item.amount }}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -12,13 +17,18 @@ export default {
     cart: Array,
   },
   computed: {
-      spisok_dlya_rendera() {
-          return this.cart.reverse();
-      },
+    reverseCart() {
+      return [...this.cart].reverse();
+    },
   },
 };
 </script>
 
-<style>
-
+<style scoped>
+  .cart-list ul li{
+    border: 1px solid #908888;
+    border-radius: 5px;
+    margin: 5px 10px;
+    padding: 5px
+  }
 </style>
