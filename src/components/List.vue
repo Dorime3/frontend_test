@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     startPricesMonitoring() {
-      this.interval = setInterval(this.getList, 2000);
+      this.interval = setInterval(() => this.getList(), 2000);
     },
     updateWidth() {
       this.viewWidth = window.innerWidth

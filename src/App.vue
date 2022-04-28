@@ -34,7 +34,7 @@ export default {
     addToCart(product) {
       this.cart.push(product)
     }
-  }
+  },
 }
 </script>
 
